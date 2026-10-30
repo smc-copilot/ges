@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.project.v1",
+  "title": "GES Project Desired State",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "profile", "agents", "engineering_stack", "resolution"],
+  "properties": {
+    "schema": { "const": "ges.project.v1" },
+    "profile": { "type": "string" },
+    "agents": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "engineering_stack": {
+      "type": "object",
+      "required": ["disciplines", "intent", "execution"],
+      "properties": {
+        "disciplines": {
+          "type": "object",
+          "required": ["provider"],
+          "properties": { "provider": { "type": "string" } }
+        },
+        "intent": {
+          "type": "object",
+          "required": ["provider"],
+          "properties": { "provider": { "type": "string" } }
+        },
+        "execution": {
+          "type": "object",
+          "required": ["provider"],
+          "properties": { "provider": { "type": "string" } }
+        }
+      }
+    },
+    "resolution": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "string" },
+        "selected": { "type": "array", "items": { "type": "string" } },
+        "excluded": { "type": "array", "items": { "type": "string" } },
+        "optional": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.source-cache-manifest.v1",
+  "title": "GES Source Cache Manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "repo", "commit", "selected_paths", "content_digest"],
+  "properties": {
+    "schema": { "const": "ges.source-cache-manifest.v1" },
+    "source_id": { "type": "string" },
+    "repo": { "type": "string" },
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "selected_paths": { "type": "array", "items": { "type": "string" } },
+    "content_digest": { "type": "string" }
+  }
+}

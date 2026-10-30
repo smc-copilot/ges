@@ -1,0 +1,30 @@
+{
+  "schema": "ges.source-cache-manifest.v1",
+  "source_id": "spec-kit",
+  "repo": "https://github.com/github/spec-kit.git",
+  "commit": "1d5106f59e1b148ee23ab136638932dd790ff1b6",
+  "selected_paths": [
+    ".specify/memory/constitution.md",
+    "scripts/python/clarify.py",
+    "scripts/python/constitution.py",
+    "scripts/python/plan.py",
+    "scripts/python/specify.py",
+    "templates/checklist-template.md",
+    "templates/commands/analyze.md",
+    "templates/commands/checklist.md",
+    "templates/commands/clarify.md",
+    "templates/commands/constitution.md",
+    "templates/commands/converge.md",
+    "templates/commands/implement.md",
+    "templates/commands/plan.md",
+    "templates/commands/specify.md",
+    "templates/commands/tasks.md",
+    "templates/commands/taskstoissues.md",
+    "templates/constitution-template.md",
+    "templates/plan-template.md",
+    "templates/spec-template.md",
+    "templates/tasks-template.md",
+    "templates/vscode-settings.json"
+  ],
+  "content_digest": "sha256:1f95a3146f8fff6a4b82d205f2d1d8f5943db8569f79dc7ee63960c9e88bcce2"
+}

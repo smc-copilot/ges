@@ -1,0 +1,50 @@
+name: GES Alpha.1 Synthetic CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, feat/ges-v6.0]
+  workflow_dispatch:
+
+jobs:
+  ges6-synthetic:
+    runs-on: ubuntu-latest
+    env:
+      GES_SOURCE_OFFLINE: "1"
+      PYTHONUTF8: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Record candidate SHA
+        run: git rev-parse HEAD > candidate.sha
+      - name: Install
+        run: python -m pip install -e . pytest
+      - name: Schema and pytest
+        run: python -m pytest tests/ges6 -q --junitxml=synthetic-test-result.xml
+      - name: Write synthetic evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, pathlib, subprocess, sys
+          sha = pathlib.Path("candidate.sha").read_text(encoding="utf-8").strip()
+          payload = {
+              "candidate_sha": sha,
+              "tool_versions": {
+                  "python": sys.version,
+                  "pytest": subprocess.check_output([sys.executable, "-m", "pytest", "--version"], text=True).strip(),
+              },
+          }
+          pathlib.Path("synthetic-evidence.json").write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+          PY
+      - name: Upload synthetic artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ges-alpha1-synthetic-${{ github.sha }}
+          path: |
+            candidate.sha
+            synthetic-test-result.xml
+            synthetic-evidence.json

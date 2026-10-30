@@ -1,0 +1,10 @@
+schema: ges.providers.v1
+providers:
+  - id: command-output.rtk
+    category: execution-efficiency
+    provider: rtk
+    default_level: recommended
+    incompatible: []
+    health_checks:
+      - binary
+      - version

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.repo-profile.v2",
+  "title": "GES Repo Profile v2",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "repository_lifecycle",
+    "layout",
+    "kind",
+    "agents",
+    "languages",
+    "spec_kit",
+    "legacy_ges",
+    "ci",
+    "scripts",
+    "tsconfig_evidence",
+    "analyzer_version",
+    "git",
+    "llm_token_usage"
+  ],
+  "properties": {
+    "schema": { "const": "ges.repo-profile.v2" },
+    "repository_lifecycle": { "type": "string", "enum": ["brownfield", "greenfield"] },
+    "layout": { "type": "string", "enum": ["monorepo", "single"] },
+    "kind": { "type": "string" },
+    "repository_kind": { "type": "string" },
+    "agents": { "type": "array", "items": { "type": "string" } },
+    "languages": { "type": "array", "items": { "type": "string" } },
+    "spec_kit": { "type": "boolean" },
+    "legacy_ges": { "type": "boolean" },
+    "ci": { "type": "array", "items": { "type": "string" } },
+    "scripts": { "type": "object" },
+    "tsconfig_evidence": { "type": "array", "items": { "type": "string" } },
+    "analyzer_version": { "type": "string" },
+    "git": { "type": "object" },
+    "llm_token_usage": { "const": 0 }
+  }
+}

@@ -1,0 +1,6 @@
+schema: ges.conflicts.v1
+pairs:
+  - [matt.to-spec, speckit.specify]
+  - [matt.implement, superpowers.execution]
+  - [speckit.implement, superpowers.execution]
+  - [superpowers.brainstorming, matt.grill-with-docs]

@@ -1,0 +1,52 @@
+name: GES Alpha.1 Golden Release Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Immutable GES candidate commit SHA
+        required: true
+        type: string
+
+jobs:
+  golden:
+    runs-on: [self-hosted, Windows]
+    env:
+      PYTHONUTF8: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      GES_RELEASE_EVIDENCE_DIR: ${{ github.workspace }}/../ges-alpha1-release-evidence
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - name: Assert detached candidate SHA
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ inputs.candidate_sha }}"
+      - name: Resolve Golden Consumer HEAD
+        id: consumer
+        shell: pwsh
+        run: |
+          $sha = git -C "E:\git\smc-copilot-desktop" rev-parse HEAD
+          "sha=$sha" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e .
+      - name: Golden closure
+        env:
+          GES_SOURCE_CACHE: ${{ github.workspace }}/tests/ges6/fixtures/source-cache
+        run: python -m ges.acceptance.run_golden_closure --artifact-dir "${{ env.GES_RELEASE_EVIDENCE_DIR }}"
+      - name: Upload golden artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ges-alpha1-golden-${{ inputs.candidate_sha }}-${{ steps.consumer.outputs.sha }}
+          path: ${{ env.GES_RELEASE_EVIDENCE_DIR }}
+      - name: Never commit evidence
+        shell: bash
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain)"

@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.bootstrap-closure-evidence.v1",
+  "title": "GES Bootstrap Closure Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "run_id", "started_at", "finished_at", "ges", "golden_consumer", "spec_kit", "cursor", "acceptances", "release_gate"],
+  "properties": {
+    "schema": { "const": "ges.bootstrap-closure-evidence.v1" },
+    "run_id": { "type": "string" },
+    "started_at": { "type": "string" },
+    "finished_at": { "type": "string" },
+    "ges": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "branch", "commit_sha", "product_version", "distribution_version"],
+      "properties": {
+        "repository": { "type": "string" },
+        "branch": { "type": "string" },
+        "commit_sha": { "type": "string" },
+        "product_version": { "type": "string" },
+        "distribution_version": { "type": "string" }
+      }
+    },
+    "golden_consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_path", "repo_identity", "source_branch", "commit_sha", "source_worktree_dirty", "source_worktree_status_digest", "test_worktree_path", "test_worktree_clean_at_start"],
+      "properties": {
+        "source_path": { "type": "string" },
+        "repo_identity": { "type": "string" },
+        "source_branch": { "type": "string" },
+        "commit_sha": { "type": "string" },
+        "source_worktree_dirty": { "type": "boolean" },
+        "source_worktree_status_digest": { "type": "string" },
+        "test_worktree_path": { "type": "string" },
+        "test_worktree_clean_at_start": { "type": "boolean" }
+      }
+    },
+    "spec_kit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "commit_sha", "specify_cli_version", "integration", "official_render_manifest_digest", "projected_manifest_digest"],
+      "properties": {
+        "repo": { "type": "string" },
+        "commit_sha": { "type": "string" },
+        "specify_cli_version": { "type": "string" },
+        "integration": { "type": "string" },
+        "official_render_manifest_digest": { "type": "string" },
+        "projected_manifest_digest": { "type": "string" }
+      }
+    },
+    "cursor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "version", "structural_discovery", "runtime_discovery"],
+      "properties": {
+        "executable": { "type": "string" },
+        "version": { "type": "string" },
+        "structural_discovery": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] },
+        "runtime_discovery": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] }
+      }
+    },
+    "acceptances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["acceptance_id", "requirement_ids", "test_ids", "status", "command", "exit_code", "oracle", "evidence_files"],
+        "properties": {
+          "acceptance_id": { "type": "string" },
+          "requirement_ids": { "type": "array", "items": { "type": "string" } },
+          "test_ids": { "type": "array", "items": { "type": "string" } },
+          "status": { "type": "string", "enum": ["PASS", "FAIL", "SKIPPED", "BLOCKED"] },
+          "command": { "type": "string" },
+          "exit_code": { "type": "integer" },
+          "oracle": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "expected", "actual"],
+            "properties": {
+              "type": { "type": "string" },
+              "expected": {},
+              "actual": {}
+            }
+          },
+          "evidence_files": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "release_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] }
+      }
+    }
+  }
+}

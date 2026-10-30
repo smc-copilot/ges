@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.policy.v1",
+  "title": "GES Governance Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "intake", "merge"],
+  "properties": {
+    "schema": { "const": "ges.policy.v1" },
+    "id": { "const": "default-v1" },
+    "intake": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["require_owner", "required_artifacts"],
+      "properties": {
+        "require_owner": { "type": "boolean" },
+        "required_artifacts": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["SPEC", "PLAN"] }
+        }
+      }
+    },
+    "merge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported_risks", "pr", "local", "review", "checks"],
+      "properties": {
+        "supported_risks": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["LOW", "MEDIUM"] }
+        },
+        "pr": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["require_open", "require_not_draft", "require_work_marker", "work_marker"],
+          "properties": {
+            "require_open": { "type": "boolean" },
+            "require_not_draft": { "type": "boolean" },
+            "require_work_marker": { "type": "boolean" },
+            "work_marker": { "type": "string" }
+          }
+        },
+        "local": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["require_head_equals_pr_head", "require_clean_tracked_tree"],
+          "properties": {
+            "require_head_equals_pr_head": { "type": "boolean" },
+            "require_clean_tracked_tree": { "type": "boolean" }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["require_decision"],
+          "properties": {
+            "require_decision": { "const": "APPROVED" }
+          }
+        },
+        "checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min_successful", "allow_pending", "allow_failed", "allow_cancelled", "allow_skipped_as_success"],
+          "properties": {
+            "min_successful": { "type": "integer", "minimum": 1 },
+            "allow_pending": { "type": "boolean" },
+            "allow_failed": { "type": "boolean" },
+            "allow_cancelled": { "type": "boolean" },
+            "allow_skipped_as_success": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

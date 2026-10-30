@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.execution-readiness.v1",
+  "title": "GES Execution Readiness",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "work_id",
+    "status",
+    "verdict",
+    "execution_profile",
+    "host",
+    "effective_required",
+    "capabilities",
+    "reasons",
+    "evaluated_at",
+    "tool_version"
+  ],
+  "properties": {
+    "schema": { "const": "ges.execution-readiness.v1" },
+    "work_id": { "type": "string" },
+    "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] },
+    "verdict": { "type": "string", "enum": ["EXECUTION_READY", "BLOCKED"] },
+    "execution_profile": { "type": "string" },
+    "host": { "type": "string" },
+    "effective_required": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "capabilities": { "type": "array" },
+    "reasons": { "type": "array" },
+    "evaluated_at": { "type": "string" },
+    "tool_version": { "type": "string" }
+  }
+}

@@ -1,0 +1,31 @@
+schema: ges.legacy-v5-inventory.v1
+bundle: "5.0.0"
+provider_root: engineeing-skills
+notes: >
+  v5 remains frozen in engineeing-skills/. GES 6 only detects and reports it.
+  Ownership proof comes from the consumer lock, not from guessing paths.
+lock_files:
+  - .smc/ges-install-lock.json
+  - .smc/ges-install-receipt.json
+  - .smc/ges-bootstrap-receipt.json
+capability_inventory:
+  - id: v5.install
+    path: engineeing-skills/install.py
+  - id: v5.install-v500
+    path: engineeing-skills/install_v500.py
+  - id: v5.consumer-bootstrap
+    path: engineeing-skills/consumer-bootstrap
+  - id: v5.context-engine
+    path: engineeing-skills/context-engine
+  - id: v5.spec-kit-adapter
+    path: engineeing-skills/integrations/spec-kit
+  - id: v5.superpowers-adapter
+    path: engineeing-skills/integrations/superpowers
+  - id: v5.work-router
+    path: engineeing-skills/.agents/skills/smc-work-router
+  - id: v5.plan-delivery
+    path: engineeing-skills/.agents/skills/smc-plan-delivery
+owned_path_prefixes:
+  - .agents/ges/
+  - .cursor/skills/smc-
+  - .smc/ges-

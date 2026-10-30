@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.evidence-snapshot.v1",
+  "title": "GES Evidence Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "work_id", "repo", "pr_number", "subject_sha", "review", "checks"],
+  "properties": {
+    "schema": { "const": "ges.evidence-snapshot.v1" },
+    "work_id": { "type": "string" },
+    "repo": { "type": "string" },
+    "pr_number": { "type": "integer" },
+    "subject_sha": { "type": "string", "minLength": 40, "maxLength": 40 },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "status", "decision"],
+      "properties": {
+        "type": { "const": "REVIEW_DECISION" },
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "MISSING"] },
+        "decision": { "type": ["string", "null"] }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "name", "conclusion", "status", "subject_sha"],
+        "properties": {
+          "type": { "const": "CI_CHECK" },
+          "name": { "type": "string" },
+          "conclusion": { "type": "string" },
+          "status": { "type": "string", "enum": ["PASS", "PENDING", "FAIL", "SKIPPED"] },
+          "subject_sha": { "type": "string", "minLength": 40, "maxLength": 40 }
+        }
+      }
+    }
+  }
+}

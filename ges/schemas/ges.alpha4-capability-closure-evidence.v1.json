@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.alpha4-capability-closure-evidence.v1",
+  "title": "GES Alpha.4 Capability Closure Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "candidate_sha",
+    "product_version",
+    "distribution_version",
+    "golden",
+    "required_acceptance_ids",
+    "acceptances",
+    "regression",
+    "release_gate",
+    "generated_at",
+    "tool_version"
+  ],
+  "properties": {
+    "schema": { "const": "ges.alpha4-capability-closure-evidence.v1" },
+    "candidate_sha": { "type": "string", "minLength": 40, "maxLength": 40 },
+    "product_version": { "type": "string" },
+    "distribution_version": { "type": "string" },
+    "golden": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_path", "origin", "head_sha", "source_clean"],
+      "properties": {
+        "source_path": { "type": "string" },
+        "origin": { "type": "string" },
+        "head_sha": { "type": "string" },
+        "source_clean": { "type": "boolean" }
+      }
+    },
+    "required_acceptance_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 11,
+      "maxItems": 11
+    },
+    "acceptances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["acceptance_id", "status", "command", "exit_code", "oracle"],
+        "properties": {
+          "acceptance_id": { "type": "string" },
+          "status": { "type": "string", "enum": ["PASS", "FAIL", "SKIPPED", "BLOCKED"] },
+          "command": { "type": "string" },
+          "exit_code": { "type": "integer" },
+          "oracle": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["expected", "actual"],
+            "properties": {
+              "expected": true,
+              "actual": true
+            }
+          }
+        }
+      }
+    },
+    "regression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bootstrap", "governance", "large_repo", "capability_resolver", "capability_governance"],
+      "properties": {
+        "bootstrap": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED", "SKIPPED"] },
+        "governance": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED", "SKIPPED"] },
+        "large_repo": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED", "SKIPPED"] },
+        "capability_resolver": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED", "SKIPPED"] },
+        "capability_governance": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED", "SKIPPED"] }
+      }
+    },
+    "release_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] }
+      }
+    },
+    "generated_at": { "type": "string" },
+    "tool_version": { "type": "string" }
+  }
+}

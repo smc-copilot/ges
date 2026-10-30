@@ -1,0 +1,43 @@
+schema: ges.product-profile.v2
+id: brownfield-product-app
+engineering_stack:
+  disciplines:
+    provider: matt
+  intent:
+    provider: spec-kit
+  execution:
+    provider: superpowers
+required:
+  - matt.setup
+recommended:
+  - matt.grill-with-docs
+  - matt.grilling
+  - matt.domain-modeling
+  - matt.codebase-design
+  - matt.to-tickets
+  - speckit.constitution
+  - speckit.specify
+  - speckit.clarify
+  - speckit.plan
+  - superpowers.using-git-worktrees
+  - superpowers.writing-plans
+  - superpowers.subagent-driven-development
+  - superpowers.test-driven-development
+  - superpowers.systematic-debugging
+  - superpowers.requesting-code-review
+  - superpowers.receiving-code-review
+  - superpowers.verification-before-completion
+  - superpowers.finishing-a-development-branch
+optional:
+  - superpowers.executing-plans
+forbidden:
+  - matt.to-spec
+  - matt.implement
+  - matt.tdd
+  - matt.diagnosing-bugs
+  - matt.code-review
+  - speckit.tasks
+  - speckit.implement
+  - speckit.converge
+  - superpowers.brainstorming
+  - superpowers.using-superpowers

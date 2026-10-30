@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.capability-status.v1",
+  "title": "GES Capability Status v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "capability_id", "provider", "status", "version", "health_checks"],
+  "properties": {
+    "schema": { "const": "ges.capability-status.v1" },
+    "capability_id": { "type": "string" },
+    "provider": { "type": "string" },
+    "status": { "type": "string", "enum": ["READY", "NOT_READY", "missing"] },
+    "version": { "type": "string" },
+    "health_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status"],
+        "properties": {
+          "name": { "type": "string" },
+          "status": { "type": "string", "enum": ["PASS", "FAIL"] }
+        }
+      }
+    }
+  }
+}

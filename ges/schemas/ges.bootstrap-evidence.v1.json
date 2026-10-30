@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.bootstrap-evidence.v1",
+  "title": "GES Bootstrap Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "ges_version", "ges_commit", "consumer_repo", "acceptances"],
+  "properties": {
+    "schema": { "const": "ges.bootstrap-evidence.v1" },
+    "ges_version": { "type": "string" },
+    "distribution_version": { "type": "string" },
+    "ges_commit": { "type": "string" },
+    "consumer_repo": { "type": "string" },
+    "consumer_commit": { "type": "string" },
+    "branch": { "type": "string" },
+    "started_at": { "type": "string" },
+    "finished_at": { "type": "string" },
+    "acceptances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["acceptance_id", "status"],
+        "properties": {
+          "acceptance_id": { "type": "string" },
+          "requirement_ids": { "type": "array", "items": { "type": "string" } },
+          "test_ids": { "type": "array", "items": { "type": "string" } },
+          "status": { "type": "string", "enum": ["PASS", "FAIL", "SKIPPED", "BLOCKED"] },
+          "command": { "type": "string" },
+          "exit_code": { "type": "integer" },
+          "oracle": { "type": "object" },
+          "evidence_files": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

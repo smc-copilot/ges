@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.business-source-snapshot.v2",
+  "title": "GES Business Source Snapshot v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "strategy",
+    "repo_head",
+    "roots",
+    "index_digest",
+    "status_digest",
+    "overlay_digest",
+    "snapshot_digest",
+    "counts",
+    "bytes_hashed",
+    "elapsed_ms"
+  ],
+  "properties": {
+    "schema": { "const": "ges.business-source-snapshot.v2" },
+    "strategy": {
+      "type": "string",
+      "enum": ["git-index-overlay", "full-sha256-fallback"]
+    },
+    "repo_head": { "type": "string" },
+    "roots": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "index_digest": { "type": "string" },
+    "status_digest": { "type": "string" },
+    "overlay_digest": { "type": "string" },
+    "snapshot_digest": { "type": "string" },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tracked",
+        "clean_tracked",
+        "dirty_tracked",
+        "untracked_nonignored",
+        "overlay_content_hashed",
+        "symlinks",
+        "submodules"
+      ],
+      "properties": {
+        "tracked": { "type": "integer" },
+        "clean_tracked": { "type": "integer" },
+        "dirty_tracked": { "type": "integer" },
+        "untracked_nonignored": { "type": "integer" },
+        "overlay_content_hashed": { "type": "integer" },
+        "symlinks": { "type": "integer" },
+        "submodules": { "type": "integer" }
+      }
+    },
+    "bytes_hashed": { "type": "integer" },
+    "elapsed_ms": { "type": "integer" },
+    "fallback_reason": { "type": "string" }
+  }
+}

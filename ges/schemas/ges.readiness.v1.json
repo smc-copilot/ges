@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.readiness.v1",
+  "title": "GES Readiness Observation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "ges_version", "checked_at", "overall", "checks"],
+  "properties": {
+    "schema": { "const": "ges.readiness.v1" },
+    "ges_version": { "type": "string" },
+    "mode": { "type": "string" },
+    "repo_head": { "type": "string" },
+    "checked_at": { "type": "string" },
+    "overall": { "type": "string", "enum": ["READY", "BOOTSTRAP_PENDING", "BLOCKED", "PASS"] },
+    "checks": { "type": "object", "additionalProperties": { "type": "string" } },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["schema", "capability_id", "provider", "status", "version", "health_checks"],
+        "properties": {
+          "schema": { "const": "ges.capability-status.v1" },
+          "capability_id": { "type": "string" },
+          "provider": { "type": "string" },
+          "status": { "type": "string", "enum": ["READY", "NOT_READY", "missing"] },
+          "version": { "type": "string" },
+          "health_checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "status"],
+              "properties": {
+                "name": { "type": "string" },
+                "status": { "type": "string", "enum": ["PASS", "FAIL"] }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

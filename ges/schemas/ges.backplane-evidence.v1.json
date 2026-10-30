@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.backplane-evidence.v1",
+  "title": "GES Alpha.2 Backplane Release Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "ges",
+    "golden_consumer",
+    "work_id",
+    "policy_digest",
+    "acceptances",
+    "release_gate"
+  ],
+  "properties": {
+    "schema": { "const": "ges.backplane-evidence.v1" },
+    "ges": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit_sha", "product_version"],
+      "properties": {
+        "repository": { "type": "string" },
+        "commit_sha": { "type": "string", "minLength": 40, "maxLength": 40 },
+        "product_version": { "type": "string" }
+      }
+    },
+    "golden_consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "pr_number", "pr_head"],
+      "properties": {
+        "repository": { "type": "string" },
+        "pr_number": { "type": ["integer", "null"] },
+        "pr_head": { "type": "string" }
+      }
+    },
+    "work_id": { "type": "string" },
+    "policy_digest": { "type": "string" },
+    "acceptances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["acceptance_id", "status", "command", "exit_code", "oracle"],
+        "properties": {
+          "acceptance_id": { "type": "string" },
+          "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED", "SKIPPED"] },
+          "command": { "type": "string" },
+          "exit_code": { "type": "integer" },
+          "oracle": { "type": "object" }
+        }
+      }
+    },
+    "release_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] }
+      }
+    }
+  }
+}

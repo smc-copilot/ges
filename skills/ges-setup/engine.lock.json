@@ -3,8 +3,8 @@
   "package": "ges",
   "product_version": "6.0.0-alpha.5",
   "repository": "https://github.com/smc-copilot/ges.git",
-  "ref": "a7490a9c617bf0a0fba0bab259b24792384e7f76",
-  "ref_kind": "commit",
-  "requirement": "ges @ git+https://github.com/smc-copilot/ges.git@a7490a9c617bf0a0fba0bab259b24792384e7f76",
-  "maintainer_note": "Update ref and requirement together when cutting a locked Composer CLI release. /ges-setup acquires this pin; users must not pip-install it as their first step."
+  "ref": "tag-1.0",
+  "ref_kind": "tag",
+  "requirement": "ges @ git+https://github.com/smc-copilot/ges.git@tag-1.0",
+  "maintainer_note": "Scheme A self-referential tag pin. Current locked release is tag-1.0. Update ref, ref_kind, and requirement together when cutting the next tag-<major>.<minor>. /ges-setup acquires this pin (prefers the GitHub Release wheel, then this git requirement). Users must not pip-install it as their first step."
 }

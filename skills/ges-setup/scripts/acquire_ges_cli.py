@@ -4,6 +4,7 @@
 Installs this repo's pinned `ges` engine into a user-local prefix
 (`$XDG_DATA_HOME/ges/engines/<ref>` or `%LOCALAPPDATA%\\ges\\engines\\<ref>`),
 preferring a venv and falling back to `pip --target` when ensurepip is missing.
+Scheme A tag pins prefer the GitHub Release wheel, then `git+https://…@<tag>`.
 Never writes the Python package into a business repo or into `.cursor`.
 """
 
@@ -12,17 +13,23 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shlex
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 LOCK_NAME = "engine.lock.json"
-SHA_LEN = 40
+SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+TAG_RE = re.compile(r"^tag-\d+\.\d+$")
+ALLOWED_REF_KINDS = ("tag", "commit")
 MIN_PYTHON = (3, 11)
+WHEEL_PROBE_TIMEOUT = 8.0
 
 
 class AcquireError(RuntimeError):
@@ -49,13 +56,26 @@ def load_pin(root: Path | None = None) -> dict[str, Any]:
         raise AcquireError("GES_ENGINE_PIN_INVALID", f"engine pin is not JSON: {exc}") from exc
     if pin.get("schema") != "ges.engine-pin.v1":
         raise AcquireError("GES_ENGINE_PIN_INVALID", "engine pin schema must be ges.engine-pin.v1")
+    ref_kind = pin.get("ref_kind")
     ref = str(pin.get("ref") or "")
-    if pin.get("ref_kind") == "commit" and len(ref) != SHA_LEN:
-        raise AcquireError("GES_ENGINE_PIN_INVALID", "engine pin commit ref must be a 40-char SHA")
-    if not pin.get("requirement"):
+    requirement = str(pin.get("requirement") or "")
+    if ref_kind not in ALLOWED_REF_KINDS:
+        raise AcquireError("GES_ENGINE_PIN_INVALID", "engine pin ref_kind must be tag or commit")
+    if not requirement:
         raise AcquireError("GES_ENGINE_PIN_INVALID", "engine pin is missing requirement")
     if not pin.get("product_version"):
         raise AcquireError("GES_ENGINE_PIN_INVALID", "engine pin is missing product_version")
+    if ref_kind == "commit":
+        if not SHA_RE.fullmatch(ref):
+            raise AcquireError("GES_ENGINE_PIN_INVALID", "engine pin commit ref must be a 40-char SHA")
+    else:
+        if not TAG_RE.fullmatch(ref):
+            raise AcquireError(
+                "GES_ENGINE_PIN_INVALID",
+                "engine pin tag ref must be tag-<major>.<minor> (e.g. tag-1.0)",
+            )
+    if ref not in requirement:
+        raise AcquireError("GES_ENGINE_PIN_INVALID", "engine pin requirement must include ref")
     return pin
 
 
@@ -159,6 +179,73 @@ def version_matches(ges_cli: Path, pin: dict[str, Any]) -> bool:
     return str(pin["product_version"]) in reported
 
 
+def pep440_public_version(version: str) -> str:
+    """Map `6.0.0-alpha.5` to the wheel token `6.0.0a5` (setuptools/PEP 440)."""
+    text = str(version).strip()
+    for label, short in (
+        ("-alpha.", "a"),
+        ("-beta.", "b"),
+        ("-rc.", "rc"),
+        (".alpha.", "a"),
+        (".beta.", "b"),
+        (".rc.", "rc"),
+    ):
+        if label in text:
+            head, tail = text.split(label, 1)
+            return f"{head}{short}{tail}"
+    return text
+
+
+def default_wheel_name(pin: dict[str, Any]) -> str:
+    return f"ges-{pep440_public_version(pin['product_version'])}-py3-none-any.whl"
+
+
+def default_wheel_url(pin: dict[str, Any]) -> str | None:
+    if pin.get("ref_kind") != "tag":
+        return None
+    repo = str(pin.get("repository") or "").removesuffix(".git")
+    if not repo.startswith("https://github.com/"):
+        return None
+    return f"{repo}/releases/download/{pin['ref']}/{default_wheel_name(pin)}"
+
+
+def resolve_wheel_requirement(pin: dict[str, Any]) -> str | None:
+    explicit = pin.get("wheel")
+    if isinstance(explicit, str) and explicit:
+        return explicit
+    if isinstance(explicit, dict):
+        url = explicit.get("url")
+        if url:
+            return str(url)
+    return default_wheel_url(pin)
+
+
+def wheel_url_available(url: str) -> bool:
+    try:
+        request = Request(url, method="HEAD")
+        with urlopen(request, timeout=WHEEL_PROBE_TIMEOUT) as response:
+            return 200 <= getattr(response, "status", 200) < 300
+    except (URLError, TimeoutError, OSError, ValueError):
+        try:
+            request = Request(url, method="GET")
+            request.add_header("Range", "bytes=0-0")
+            with urlopen(request, timeout=WHEEL_PROBE_TIMEOUT) as response:
+                return 200 <= getattr(response, "status", 200) < 400
+        except (URLError, TimeoutError, OSError, ValueError):
+            return False
+
+
+def install_specs(pin: dict[str, Any], source: Path | None) -> list[tuple[str, bool]]:
+    if source is not None:
+        return [(str(source), True)]
+    specs: list[tuple[str, bool]] = []
+    wheel = resolve_wheel_requirement(pin)
+    if wheel and (wheel.startswith("/") or wheel_url_available(wheel)):
+        specs.append((wheel, False))
+    specs.append((str(pin["requirement"]), False))
+    return specs
+
+
 def acquire(
     *,
     skill_root: Path | None = None,
@@ -172,21 +259,28 @@ def acquire(
     if existing and version_matches(existing, pin):
         return _payload(pin, existing, existing.parent, cache="hit", source=source)
     python_exe = require_python_311(python)
-    requirement = str(source) if source is not None else str(pin["requirement"])
-    venv_error = _install_into_venv(pin, home, requirement, source is not None, python_exe)
+    errors: list[str] = []
+    last_requirement = str(pin["requirement"])
+    for requirement, editable in install_specs(pin, source):
+        last_requirement = requirement
+        venv_error = _install_into_venv(pin, home, requirement, editable, python_exe)
+        exe = resolve_cli(pin, home)
+        if exe and version_matches(exe, pin):
+            return _payload(pin, exe, exe.parent, cache="miss", source=source, python=python_exe)
+        target_error = _install_into_target(pin, home, requirement, editable, python_exe)
+        exe = resolve_cli(pin, home)
+        if exe and version_matches(exe, pin):
+            return _payload(pin, exe, exe.parent, cache="miss", source=source, python=python_exe)
+        errors.extend(item for item in (venv_error, target_error) if item)
     exe = resolve_cli(pin, home)
-    if exe and version_matches(exe, pin):
-        return _payload(pin, exe, exe.parent, cache="miss", source=source, python=python_exe)
-    target_error = _install_into_target(pin, home, requirement, source is not None, python_exe)
-    exe = resolve_cli(pin, home)
-    if exe and version_matches(exe, pin):
-        return _payload(pin, exe, exe.parent, cache="miss", source=source, python=python_exe)
     reported = cli_version(exe) if exe and exe.is_file() else ""
+    if reported:
+        errors.append(reported)
     raise AcquireError(
         "GES_ENGINE_INSTALL_FAILED",
         "could not acquire the locked ges CLI",
-        stderr="\n".join(item for item in (venv_error, target_error, reported) if item)[-2000:],
-        requirement=requirement,
+        stderr="\n".join(errors)[-2000:],
+        requirement=last_requirement,
     )
 
 

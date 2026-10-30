@@ -62,7 +62,7 @@ Default target: the workspace root.
 
 Run the skill script. It reads `engine.lock.json` and installs the
 pinned engine into a **user-local** venv. Users should not see a pip
-ritual, a pin SHA, or "run `pip install -e .`".
+ritual, a pin tag, or "run `pip install -e .`".
 
 ```bash
 python3 "$SKILL_DIR/scripts/ges_setup.py" --repo "$TARGET"
@@ -101,6 +101,8 @@ If overall is `BLOCKED`, show the failing checks and stop.
 
 ## Maintainer pin (do not show unless asked)
 
-`engine.lock.json` records the locked Composer CLI commit. Update `ref`
-and `requirement` together when cutting an engine release. Users never
-install that pin themselves.
+`engine.lock.json` is a scheme A self-referential tag pin. Current
+locked release: `tag-1.0` (`ref_kind` `tag`, `ref` `tag-1.0`,
+requirement `ges @ git+https://github.com/smc-copilot/ges.git@tag-1.0`).
+Update `ref`, `ref_kind`, and `requirement` together when cutting the
+next `tag-<major>.<minor>`. Users never install that pin themselves.

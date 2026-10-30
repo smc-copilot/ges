@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.lock.v1",
+  "title": "GES Lock File",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "ges_version", "sources", "capabilities"],
+  "properties": {
+    "schema": { "const": "ges.lock.v1" },
+    "ges_version": { "type": "string" },
+    "sources": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["repo", "commit_sha"],
+        "properties": {
+          "repo": { "type": "string" },
+          "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+          "content_identity": { "type": "string" }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "content_identity": { "type": "object" }
+  }
+}

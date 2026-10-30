@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.acceptance-evidence.v1",
+  "title": "GES Acceptance Evidence",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "ts", "acceptances"],
+  "properties": {
+    "schema": { "const": "ges.acceptance-evidence.v1" },
+    "ts": { "type": "string" },
+    "command": { "type": "string" },
+    "exit_code": { "type": "integer" },
+    "acceptances": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["PASS", "FAIL", "SKIPPED", "BLOCKED"]
+      }
+    }
+  }
+}

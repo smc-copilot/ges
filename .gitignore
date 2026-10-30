@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+dist/
+build/
+.cache/
+.DS_Store
+.env
+.coverage
+htmlcov/
+# Ignore a local Cursor project dir, but keep fixture .cursor trees.
+/.cursor/

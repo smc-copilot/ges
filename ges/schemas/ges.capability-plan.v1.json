@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.capability-plan.v1",
+  "title": "GES Capability Plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "required", "recommended", "optional", "incompatible", "reasons", "llm_token_usage"],
+  "properties": {
+    "schema": { "const": "ges.capability-plan.v1" },
+    "required": { "type": "array", "items": { "type": "string" } },
+    "recommended": { "type": "array", "items": { "type": "string" } },
+    "optional": { "type": "array", "items": { "type": "string" } },
+    "incompatible": { "type": "array", "items": { "type": "string" } },
+    "reasons": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "llm_token_usage": { "const": 0 }
+  }
+}

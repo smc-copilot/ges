@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.gate-result.v1",
+  "title": "GES Gate Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "gate", "work_id", "status", "verdict", "subject_sha", "reasons", "evaluated_at", "tool_version"],
+  "properties": {
+    "schema": { "const": "ges.gate-result.v1" },
+    "gate": { "type": "string", "enum": ["INTAKE", "MERGE"] },
+    "work_id": { "type": "string" },
+    "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] },
+    "verdict": { "type": "string", "enum": ["WORK_READY", "MERGE_READY", "BLOCKED"] },
+    "subject_sha": { "type": "string" },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "scope", "expected", "actual", "source", "remediation_hint"],
+        "properties": {
+          "code": { "type": "string" },
+          "scope": { "type": "string" },
+          "expected": {},
+          "actual": {},
+          "source": { "type": "string" },
+          "remediation_hint": { "type": "string" }
+        }
+      }
+    },
+    "evaluated_at": { "type": "string" },
+    "tool_version": { "type": "string" },
+    "captured_at": { "type": "string" },
+    "rechecked_at": { "type": "string" }
+  }
+}

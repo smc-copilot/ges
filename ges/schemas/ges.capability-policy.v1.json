@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.capability-policy.v1",
+  "title": "GES Parallel Capability Policy Overlay",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "required", "recommended", "optional", "prohibited"],
+  "properties": {
+    "schema": { "const": "ges.capability-policy.v1" },
+    "required": { "type": "array", "items": { "type": "string" } },
+    "recommended": { "type": "array", "items": { "type": "string" } },
+    "optional": { "type": "array", "items": { "type": "string" } },
+    "prohibited": { "type": "array", "items": { "type": "string" } }
+  }
+}

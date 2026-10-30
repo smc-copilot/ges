@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.install-receipt.v2",
+  "title": "GES Install Receipt v2",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "installed_at",
+    "ges_version",
+    "transaction_id",
+    "repo_identity",
+    "managed_artifacts",
+    "source_commits",
+    "capability_set"
+  ],
+  "properties": {
+    "schema": { "const": "ges.install-receipt.v2" },
+    "installed_at": { "type": "string" },
+    "ges_version": { "type": "string" },
+    "transaction_id": { "type": "string" },
+    "repo_identity": { "type": "object" },
+    "managed_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "ownership_type", "last_applied_hash"],
+        "properties": {
+          "path": { "type": "string" },
+          "ownership_type": { "type": "string", "enum": ["FILE", "SECTION", "ENTRY"] },
+          "selector": { "type": ["string", "object", "null"] },
+          "last_applied_hash": { "type": "string" },
+          "generated_hash": { "type": "string" },
+          "producer": { "type": "string" },
+          "capability_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "source_commits": { "type": "object" },
+    "capability_set": { "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.install-plan.v1",
+  "title": "GES Install Plan",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "files_to_create",
+    "files_to_update",
+    "managed_sections_to_add",
+    "skills_to_add",
+    "skills_to_remove",
+    "source_shas",
+    "legacy_report",
+    "business_source_guard"
+  ],
+  "properties": {
+    "schema": { "const": "ges.install-plan.v1" },
+    "files_to_create": { "type": "array" },
+    "files_to_update": { "type": "array" },
+    "managed_sections_to_add": { "type": "array" },
+    "skills_to_add": { "type": "array" },
+    "skills_to_remove": { "type": "array" },
+    "source_shas": { "type": "object" },
+    "legacy_report": { "type": "object" },
+    "business_source_guard": { "type": "object" },
+    "entries": { "type": "array" },
+    "noop": { "type": "boolean" }
+  }
+}

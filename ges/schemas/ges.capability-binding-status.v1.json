@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.capability-binding-status.v1",
+  "title": "GES Capability Host Binding Status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "capability_id",
+    "provider",
+    "host",
+    "status",
+    "provider_status",
+    "observations",
+    "evaluated_at"
+  ],
+  "properties": {
+    "schema": { "const": "ges.capability-binding-status.v1" },
+    "capability_id": { "type": "string" },
+    "provider": { "type": "string" },
+    "host": { "type": "string", "enum": ["cursor", "codex", "hermes"] },
+    "status": { "type": "string", "enum": ["BOUND", "UNBOUND", "UNPROVEN", "UNSUPPORTED"] },
+    "provider_status": { "type": "string", "enum": ["READY", "NOT_READY", "missing"] },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status", "source", "digest"],
+        "properties": {
+          "name": { "type": "string" },
+          "status": { "type": "string", "enum": ["PASS", "FAIL"] },
+          "source": { "type": "string" },
+          "digest": { "type": "string" }
+        }
+      }
+    },
+    "evaluated_at": { "type": "string", "minLength": 1 }
+  }
+}

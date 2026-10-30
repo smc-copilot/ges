@@ -1,0 +1,352 @@
+schema: ges.capabilities.v1
+capabilities:
+  - id: matt.setup
+    source: matt
+    source_path: skills/engineering/setup-matt-pocock-skills
+    owner_domain: setup
+    requires: []
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: setup-matt-pocock-skills
+
+  - id: matt.grill-with-docs
+    source: matt
+    source_path: skills/engineering/grill-with-docs
+    owner_domain: discovery
+    requires: [matt.grilling, matt.domain-modeling]
+    conflicts: [superpowers.brainstorming]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: grill-with-docs
+
+  - id: matt.grilling
+    source: matt
+    source_path: skills/productivity/grilling
+    owner_domain: discovery-support
+    requires: []
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: grilling
+
+  - id: matt.domain-modeling
+    source: matt
+    source_path: skills/engineering/domain-modeling
+    owner_domain: discovery-support
+    requires: []
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: domain-modeling
+
+  - id: matt.codebase-design
+    source: matt
+    source_path: skills/engineering/codebase-design
+    owner_domain: design
+    requires: []
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: codebase-design
+
+  - id: matt.to-tickets
+    source: matt
+    source_path: skills/engineering/to-tickets
+    owner_domain: decompose
+    requires: []
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: to-tickets
+
+  - id: matt.to-spec
+    source: matt
+    source_path: skills/engineering/to-spec
+    owner_domain: spec-author
+    requires: []
+    conflicts: [speckit.specify]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: []
+    skill_name: to-spec
+
+  - id: matt.implement
+    source: matt
+    source_path: skills/engineering/implement
+    owner_domain: implementation
+    requires: []
+    conflicts: [superpowers.execution]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: []
+    skill_name: implement
+
+  - id: matt.tdd
+    source: matt
+    source_path: skills/engineering/tdd
+    owner_domain: tdd
+    requires: []
+    conflicts: [superpowers.test-driven-development]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: []
+    skill_name: tdd
+
+  - id: matt.diagnosing-bugs
+    source: matt
+    source_path: skills/engineering/diagnosing-bugs
+    owner_domain: debug
+    requires: []
+    conflicts: [superpowers.systematic-debugging]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: []
+    skill_name: diagnosing-bugs
+
+  - id: matt.code-review
+    source: matt
+    source_path: skills/engineering/code-review
+    owner_domain: review
+    requires: []
+    conflicts: [superpowers.requesting-code-review]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: []
+    skill_name: code-review
+
+  - id: speckit.constitution
+    source: spec-kit
+    source_path: templates/commands/constitution.md
+    owner_domain: intent-support
+    requires: []
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: speckit-capability
+    default_profiles: [brownfield-product-app]
+    skill_name: speckit-constitution
+    runtime_paths:
+      - .specify
+      - templates/constitution-template.md
+
+  - id: speckit.specify
+    source: spec-kit
+    source_path: templates/commands/specify.md
+    owner_domain: spec-author
+    requires: [speckit.constitution]
+    conflicts: [matt.to-spec]
+    supported_harnesses: [cursor, codex]
+    projection_type: speckit-capability
+    default_profiles: [brownfield-product-app]
+    skill_name: speckit-specify
+    runtime_paths:
+      - templates/spec-template.md
+
+  - id: speckit.clarify
+    source: spec-kit
+    source_path: templates/commands/clarify.md
+    owner_domain: intent-support
+    requires: [speckit.specify]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: speckit-capability
+    default_profiles: [brownfield-product-app]
+    skill_name: speckit-clarify
+
+  - id: speckit.plan
+    source: spec-kit
+    source_path: templates/commands/plan.md
+    owner_domain: intent-support
+    requires: [speckit.specify]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: speckit-capability
+    default_profiles: [brownfield-product-app]
+    skill_name: speckit-plan
+    runtime_paths:
+      - templates/plan-template.md
+
+  - id: speckit.tasks
+    source: spec-kit
+    source_path: templates/commands/tasks.md
+    owner_domain: tasks
+    requires: [speckit.plan]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: speckit-capability
+    default_profiles: []
+    skill_name: speckit-tasks
+    runtime_paths:
+      - templates/tasks-template.md
+
+  - id: speckit.implement
+    source: spec-kit
+    source_path: templates/commands/implement.md
+    owner_domain: implementation
+    requires: [speckit.plan]
+    conflicts: [superpowers.execution]
+    supported_harnesses: [cursor, codex]
+    projection_type: speckit-capability
+    default_profiles: []
+    skill_name: speckit-implement
+
+  - id: speckit.converge
+    source: spec-kit
+    source_path: templates/commands/converge.md
+    owner_domain: intent-support
+    requires: [speckit.specify]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: speckit-capability
+    default_profiles: []
+    skill_name: speckit-converge
+
+  - id: superpowers.execution
+    source: superpowers
+    source_path: skills/writing-plans
+    owner_domain: implementation
+    requires: []
+    conflicts: [matt.implement, speckit.implement]
+    supported_harnesses: [cursor, codex]
+    projection_type: virtual
+    default_profiles: [brownfield-product-app]
+    skill_name: null
+
+  - id: superpowers.using-git-worktrees
+    source: superpowers
+    source_path: skills/using-git-worktrees
+    owner_domain: execution-support
+    requires: [superpowers.execution]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: using-git-worktrees
+
+  - id: superpowers.writing-plans
+    source: superpowers
+    source_path: skills/writing-plans
+    owner_domain: execution-support
+    requires: [superpowers.execution]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: writing-plans
+
+  - id: superpowers.subagent-driven-development
+    source: superpowers
+    source_path: skills/subagent-driven-development
+    owner_domain: execution-support
+    requires: [superpowers.execution]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: subagent-driven-development
+
+  - id: superpowers.test-driven-development
+    source: superpowers
+    source_path: skills/test-driven-development
+    owner_domain: tdd
+    requires: [superpowers.execution]
+    conflicts: [matt.tdd]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: test-driven-development
+
+  - id: superpowers.systematic-debugging
+    source: superpowers
+    source_path: skills/systematic-debugging
+    owner_domain: debug
+    requires: [superpowers.execution]
+    conflicts: [matt.diagnosing-bugs]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: systematic-debugging
+
+  - id: superpowers.requesting-code-review
+    source: superpowers
+    source_path: skills/requesting-code-review
+    owner_domain: review
+    requires: [superpowers.execution]
+    conflicts: [matt.code-review]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: requesting-code-review
+
+  - id: superpowers.receiving-code-review
+    source: superpowers
+    source_path: skills/receiving-code-review
+    owner_domain: review
+    requires: [superpowers.execution]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: receiving-code-review
+
+  - id: superpowers.verification-before-completion
+    source: superpowers
+    source_path: skills/verification-before-completion
+    owner_domain: execution-support
+    requires: [superpowers.execution]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: verification-before-completion
+
+  - id: superpowers.finishing-a-development-branch
+    source: superpowers
+    source_path: skills/finishing-a-development-branch
+    owner_domain: execution-support
+    requires: [superpowers.execution]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    skill_name: finishing-a-development-branch
+
+  - id: superpowers.executing-plans
+    source: superpowers
+    source_path: skills/executing-plans
+    owner_domain: execution-support
+    requires: [superpowers.execution]
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: [brownfield-product-app]
+    optional: true
+    skill_name: executing-plans
+
+  - id: superpowers.brainstorming
+    source: superpowers
+    source_path: skills/brainstorming
+    owner_domain: discovery
+    requires: []
+    conflicts: [matt.grill-with-docs]
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: []
+    skill_name: brainstorming
+
+  - id: superpowers.using-superpowers
+    source: superpowers
+    source_path: skills/using-superpowers
+    owner_domain: bootstrap
+    requires: []
+    conflicts: []
+    supported_harnesses: [cursor, codex]
+    projection_type: skill
+    default_profiles: []
+    skill_name: using-superpowers

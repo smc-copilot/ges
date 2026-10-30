@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.trace.v1",
+  "title": "GES Traceability Graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "work_id", "subject_sha", "nodes", "edges"],
+  "properties": {
+    "schema": { "const": "ges.trace.v1" },
+    "work_id": { "type": "string" },
+    "subject_sha": { "type": "string" },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "kind": {
+            "type": "string",
+            "enum": ["WORK", "SPEC", "PLAN", "PR", "COMMIT", "CI_CHECK", "REVIEW_DECISION"]
+          },
+          "status": { "type": "string", "enum": ["PRESENT", "MISSING", "CURRENT", "STALE", "PASS", "FAIL"] },
+          "ref": { "type": "string" }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "from", "to"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "WORK_HAS_SPEC",
+              "WORK_HAS_PLAN",
+              "PR_DECLARES_WORK",
+              "PR_HEAD_IS_COMMIT",
+              "CHECK_VERIFIES_COMMIT",
+              "REVIEW_GOVERNS_PR"
+            ]
+          },
+          "from": { "type": "string" },
+          "to": { "type": "string" }
+        }
+      }
+    }
+  }
+}

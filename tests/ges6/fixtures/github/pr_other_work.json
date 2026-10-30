@@ -1,0 +1,12 @@
+{
+  "number": 12,
+  "state": "OPEN",
+  "isDraft": false,
+  "url": "https://github.com/example/repo/pull/12",
+  "author": { "login": "ops" },
+  "headRefOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "baseRefName": "master",
+  "body": "GES-Work: WI-OTHER-0002",
+  "reviewDecision": "APPROVED",
+  "statusCheckRollup": [{ "name": "check", "conclusion": "SUCCESS" }]
+}

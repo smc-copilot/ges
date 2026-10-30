@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.repo-profile.v1",
+  "title": "GES Repo Profile",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "repository_kind",
+    "agents",
+    "languages",
+    "spec_kit",
+    "legacy_ges",
+    "ci"
+  ],
+  "properties": {
+    "schema": { "const": "ges.repo-profile.v1" },
+    "repository_kind": {
+      "type": "string",
+      "enum": [
+        "brownfield",
+        "brownfield-monorepo",
+        "greenfield",
+        "greenfield-monorepo"
+      ]
+    },
+    "agents": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["cursor", "codex", "hermes"] }
+    },
+    "languages": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "spec_kit": { "type": "boolean" },
+    "legacy_ges": { "type": "boolean" },
+    "ci": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

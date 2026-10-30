@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.alpha5-work-execution-evidence.v1",
+  "title": "GES Alpha.5 Work Execution Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "candidate_sha",
+    "product_version",
+    "distribution_version",
+    "alpha4_closure_gate",
+    "golden",
+    "g1",
+    "g2",
+    "release_gate",
+    "generated_at",
+    "tool_version"
+  ],
+  "properties": {
+    "schema": { "const": "ges.alpha5-work-execution-evidence.v1" },
+    "candidate_sha": { "type": "string", "minLength": 40, "maxLength": 40 },
+    "product_version": { "type": "string" },
+    "distribution_version": { "type": "string" },
+    "alpha4_closure_gate": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] },
+    "golden": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_path", "origin", "head_sha", "source_clean"],
+      "properties": {
+        "source_path": { "type": "string" },
+        "origin": { "type": "string" },
+        "head_sha": { "type": "string" },
+        "source_clean": { "type": "boolean" }
+      }
+    },
+    "g1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "verdict"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] },
+        "verdict": { "type": "string" }
+      }
+    },
+    "g2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "verdict"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] },
+        "verdict": { "type": "string" }
+      }
+    },
+    "release_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] }
+      }
+    },
+    "generated_at": { "type": "string" },
+    "tool_version": { "type": "string" }
+  }
+}

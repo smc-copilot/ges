@@ -1,0 +1,17 @@
+schema: ges.sources.v1
+sources:
+  matt:
+    id: matt
+    cache_key: mattpocock-skills
+    repo: https://github.com/mattpocock/skills.git
+    commit_sha: 959a8e9f1edc3adbe2f7e3054bb6fbefa6696260
+  spec-kit:
+    id: spec-kit
+    cache_key: spec-kit
+    repo: https://github.com/github/spec-kit.git
+    commit_sha: 1d5106f59e1b148ee23ab136638932dd790ff1b6
+  superpowers:
+    id: superpowers
+    cache_key: superpowers
+    repo: https://github.com/obra/superpowers.git
+    commit_sha: b36e0829c6d0140e93cfef2ca599b1b07d4a7797

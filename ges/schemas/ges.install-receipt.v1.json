@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.install-receipt.v1",
+  "title": "GES Install Receipt",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "installed_at",
+    "ges_version",
+    "repo_identity",
+    "managed_files",
+    "managed_sections",
+    "content_hashes",
+    "source_commits",
+    "capability_set"
+  ],
+  "properties": {
+    "schema": { "const": "ges.install-receipt.v1" },
+    "installed_at": { "type": "string" },
+    "ges_version": { "type": "string" },
+    "repo_identity": { "type": "object" },
+    "managed_files": { "type": "array", "items": { "type": "string" } },
+    "managed_sections": { "type": "array" },
+    "content_hashes": { "type": "object" },
+    "source_commits": { "type": "object" },
+    "capability_set": { "type": "array", "items": { "type": "string" } }
+  }
+}

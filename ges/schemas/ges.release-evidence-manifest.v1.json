@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.release-evidence-manifest.v1",
+  "title": "GES Release Evidence Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "release", "candidate", "golden_consumer", "synthetic", "golden", "documentation", "release_gate"],
+  "properties": {
+    "schema": { "const": "ges.release-evidence-manifest.v1" },
+    "release": { "const": "ges-v6.0.0-alpha.1" },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit_sha", "branch"],
+      "properties": {
+        "repository": { "type": "string" },
+        "commit_sha": { "type": "string", "minLength": 40, "maxLength": 40 },
+        "branch": { "type": "string" }
+      }
+    },
+    "golden_consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit_sha"],
+      "properties": {
+        "repository": { "type": "string" },
+        "commit_sha": { "type": "string", "minLength": 40, "maxLength": 40 }
+      }
+    },
+    "synthetic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "workflow_run_id", "artifact_name", "sha256"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] },
+        "workflow_run_id": { "type": "string" },
+        "artifact_name": { "type": "string" },
+        "sha256": { "type": "string" }
+      }
+    },
+    "golden": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "workflow_run_id", "artifact_name", "evidence_sha256"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] },
+        "workflow_run_id": { "type": "string" },
+        "artifact_name": { "type": "string" },
+        "evidence_sha256": { "type": "string" }
+      }
+    },
+    "documentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED"] }
+      }
+    },
+    "release_gate": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED", "STALE"] }
+  }
+}

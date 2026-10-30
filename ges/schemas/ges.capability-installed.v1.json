@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ges.capability-installed.v1",
+  "title": "GES Parallel Capability Installed Overlay",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "installed"],
+  "properties": {
+    "schema": { "const": "ges.capability-installed.v1" },
+    "installed": { "type": "array", "items": { "type": "string" } }
+  }
+}

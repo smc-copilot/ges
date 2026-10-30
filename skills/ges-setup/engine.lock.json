@@ -3,8 +3,8 @@
   "package": "ges",
   "product_version": "6.0.0-alpha.5",
   "repository": "https://github.com/smc-copilot/ges.git",
-  "ref": "6fdfbba4fa84bc5d8b2262530556e6fcbfa16538",
+  "ref": "a7490a9c617bf0a0fba0bab259b24792384e7f76",
   "ref_kind": "commit",
-  "requirement": "ges @ git+https://github.com/smc-copilot/ges.git@6fdfbba4fa84bc5d8b2262530556e6fcbfa16538",
+  "requirement": "ges @ git+https://github.com/smc-copilot/ges.git@a7490a9c617bf0a0fba0bab259b24792384e7f76",
   "maintainer_note": "Update ref and requirement together when cutting a locked Composer CLI release. /ges-setup acquires this pin; users must not pip-install it as their first step."
 }

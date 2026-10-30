@@ -1,100 +1,101 @@
-# GES 6 Composer + Governance Backplane
+# GES
 
-Standalone Python package for **GES 6** (`6.0.0-alpha.5`): a Composer that
-installs a pinned engineering stack into a business repository, plus a
-Governance Backplane for work, policy, evidence, and execution gates.
+GES prepares a **business repository** for Cursor Composer: a projection-ready
+first-install state (`.ges` lock/receipt, managed skills).
 
-This repository is extracted from
+This repository is the thin Cursor-facing onboarding product. The central
+control plane stays in
 [smc-copilot/governance-engineering](https://github.com/smc-copilot/governance-engineering).
-The central delivery control plane (`registry/`, `features/`, `programs/`,
-governance `tools/`) stays in that repo. This package is only the `ges`
-import tree, its CLI, schemas/catalog, and the GES 6 test suite.
+The published engine artifact is the Python package `ges`.
 
-## Install
+## Use GES in a business repo
 
-Requires Python 3.11+.
+**1. Install only the Cursor skill** (run this from the business repo):
 
 ```bash
-python -m pip install -e .
+npx skills@latest add smc-copilot/ges -a cursor --path skills
 ```
 
-With the test extra:
+That is the **only recommended** install. `--path skills` copies
+`skills/ges-setup` and nothing else.
+
+**2. In Cursor, run `/ges-setup`.**
+
+The skill acquires the locked `ges` CLI (you do not pip-install it), runs
+Composer first-install on the business repo, then reports `ges check` /
+`ges doctor`.
+
+Done. Success looks like today's Composer projection-ready state. Matt
+project-level setup may still be `BOOTSTRAP_PENDING` — that is recoverable,
+not READY.
+
+### Do not
+
+- Clone this repository into the business repo's `.cursor` or `.agents`
+- Install the `ges/` Python tree as a Cursor skill
+- Start with `pip install` / `ges init` as the first human step
+- Run `ges governance init` or any central-registry / cross-repo flow
+  during first install
+
+Those paths are unsupported. `/ges-setup` is the first touchpoint.
+
+## What first install does not do
+
+Composer first-install readiness **only**. It does not onboard the central
+registry, enable cross-repo features, or run `ges governance init`.
+
+## Maintainers / engine developers
+
+Secondary to the Cursor path above. The published artifact remains the
+`ges` Python package (`6.0.0-alpha.5`) with console script
+`ges = ges.cli.main:main`.
 
 ```bash
 python -m pip install -e ".[dev]"
-```
-
-## CLI
-
-The `ges` console script points at `ges.cli.main:main` (same entry point as
-the vendored copy in governance-engineering):
-
-```bash
 ges --help
 ges --version
-python -m ges --help
+python -m pytest -q
 ```
 
-Typical Composer flow against a business repo:
-
-```bash
-ges analyze /path/to/repo
-ges init /path/to/repo
-ges check /path/to/repo
-ges doctor /path/to/repo
-```
-
-`ges --version` reports the product version (`6.0.0-alpha.5`) and the
-historical distribution field still recorded as `1.2.1` from the parent
-`smc-delivery-governance` package. That distribution string is leftover
-vendoring metadata; follow-up can align it with this package's version.
-
-## Tests
-
-Synthetic GES 6 acceptances live under `tests/ges6` and use the offline
-source-cache fixtures (no GitHub token required):
+Offline GES 6 acceptances (no GitHub token):
 
 ```bash
 GES_SOURCE_OFFLINE=1 python -m pytest tests/ges6 -q
 ```
 
-or simply:
+Product-surface smoke (skill frontmatter, pin, business-repo guards):
 
 ```bash
-python -m pytest -q
+python -m pytest tests/product -q
 ```
 
-Golden Consumer / live release-gate jobs (self-hosted Windows runner,
-`E:\git\smc-copilot-desktop`, Cursor CLI) are **not** run by default.
-They need operator secrets and a Golden worktree. The
-`.github/workflows/ges-alpha1-golden.yml` workflow remains the dispatch
-entry for that path.
+`/ges-setup` fetches the locked engine from
+`skills/ges-setup/engine.lock.json` into a user-local venv
+(`~/.local/share/ges/engines/<ref>`). Update `ref` and `requirement`
+together when cutting a CLI release. Users should not need to know the pin.
 
-`tests/fixtures` from governance-engineering was **not** copied: those
-YAML/JSON files are used only by central delivery-governance tests.
+`pip install -e .` is for people changing this package, not for business-repo
+onboarding.
 
-The official Spec Kit staging fixture in governance-engineering omitted
-`.cursor/skills/` because that repo's `.gitignore` ignored all `.cursor`
-paths. This package reconstructs those four selected skills
-(`constitution`, `specify`, `clarify`, `plan`) from pinned spec-kit
-`1d5106f59e1b148ee23ab136638932dd790ff1b6` so offline pytest can run
-without `uvx` / network.
-
-## Layout
+### Layout
 
 ```text
-ges/                 Import package (Composer, backplane, CLI, schemas)
+skills/ges-setup/    Cursor product skill (/ges-setup) + locked engine pin
+ges/                 Published Composer + backplane + CLI (unchanged artifact)
 tests/ges6/          Synthetic acceptances + offline fixtures
+tests/product/       Skill / pin / guard smoke
 lat.md/ges6/         GES 6 LAT pages required by release-doc oracles
-.github/workflows/   Synthetic CI + Golden release-gate dispatch
 ```
 
-## Follow-up in governance-engineering
+The Python wheel still packages only `ges*`. Cursor install must use
+`--path skills` so fixture `SKILL.md` files under `tests/` and the engine
+tree never land in a business repo's `.cursor`.
 
-Out of scope here. After this package lands:
+### Follow-up in governance-engineering
 
-1. Depend on `ges` (path, VCS, or published index) instead of the vendored
-   `ges/` tree.
-2. Remove the in-repo `ges/` package and `tests/ges6/` from
-   governance-engineering.
-3. Keep the central control-plane tools and registries there.
+1. Depend on this package instead of the vendored `ges/` tree.
+2. Point operators at `/ges-setup` instead of GUIDE.md `ges init` as the
+   consumer first step.
+3. Keep the central control plane (`registry/`, `features/`, `programs/`,
+   governance `tools/`) there.
+4. Do not fold central registry onboarding into this product's first install.
